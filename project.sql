@@ -7,7 +7,7 @@
 
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- //////////////////////////////////////////////////////
---         			DDL SCRIPTS
+--                     DDL SCRIPTS
 -- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
@@ -47,8 +47,10 @@ create table project.chat
 (
 	chat_id			serial			primary key,
 	avatar_id		integer			references project.avatar(avatar_id),
-	members_cnt		integer			not null
+	members_cnt		integer			not null,
+	chat_nm			varchar(256)	not null
 );
+
 
 -- MESSAGE TABLE
 create table project.message
@@ -156,3 +158,212 @@ foreign key (bot_id) references project.bot(bot_id);
 alter table project.bot_x_chat
 add constraint FK_chat
 foreign key (chat_id) references project.chat(chat_id);
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- //////////////////////////////////////////////////////
+--                      INSERTIONS
+-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- AVATAR INSERTIONS
+insert into project.avatar (avatar_id, avatar_url)
+values (default, 'http://cdn.messenger.com/avatar/avatar_blob_1324.png');
+insert into project.avatar (avatar_id, avatar_url)
+values (default, 'http://cdn.messenger.com/avatar/avatar_blob_1576.png');
+insert into project.avatar (avatar_id, avatar_url)
+values (default, 'http://cdn.messenger.com/avatar/avatar_blob_1936.png');
+insert into project.avatar (avatar_id, avatar_url)
+values (default, 'http://cdn.messenger.com/avatar/avatar_blob_2078.png');
+insert into project.avatar (avatar_id, avatar_url)
+values (default, 'http://cdn.messenger.com/avatar/avatar_blob_6589.png');
+insert into project.avatar (avatar_id, avatar_url)
+values (default, 'http://cdn.messenger.com/avatar/avatar_blob_1203.png');
+insert into project.avatar (avatar_id, avatar_url)
+values (default, 'http://cdn.messenger.com/avatar/avatar_blob_1437.png');
+insert into project.avatar (avatar_id, avatar_url)
+values (default, 'http://cdn.messenger.com/avatar/avatar_blob_1247.png');
+insert into project.avatar (avatar_id, avatar_url)
+values (default, 'http://cdn.messenger.com/avatar/avatar_blob_9864.png');
+insert into project.avatar (avatar_id, avatar_url)
+values (default, 'http://cdn.messenger.com/avatar/avatar_blob_2387.png');
+
+
+-- STICKER INSERTIONS
+insert into project.sticker (sticker_id, emotion_nm, picture_url)
+values (default, 'anger', 'http://cdn.messenger.com/sticker/sticker_blob_1786.svg');
+insert into project.sticker (sticker_id, emotion_nm, picture_url)
+values (default, 'happiness', 'http://cdn.messenger.com/sticker/sticker_blob_3267.svg');
+insert into project.sticker (sticker_id, emotion_nm, picture_url)
+values (default, 'love', 'http://cdn.messenger.com/sticker/sticker_blob_7843.svg');
+insert into project.sticker (sticker_id, emotion_nm, picture_url)
+values (default, 'love', 'http://cdn.messenger.com/sticker/sticker_blob_8790.svg');
+insert into project.sticker (sticker_id, emotion_nm, picture_url)
+values (default, 'upset', 'http://cdn.messenger.com/sticker/sticker_blob_4583.svg');
+insert into project.sticker (sticker_id, emotion_nm, picture_url)
+values (default, 'facepalm', 'http://cdn.messenger.com/sticker/sticker_blob_2156.svg');
+insert into project.sticker (sticker_id, emotion_nm, picture_url)
+values (default, 'anger', 'http://cdn.messenger.com/sticker/sticker_blob_9075.svg');
+insert into project.sticker (sticker_id, emotion_nm, picture_url)
+values (default, 'facepalm', 'http://cdn.messenger.com/sticker/sticker_blob_3219.svg');
+insert into project.sticker (sticker_id, emotion_nm, picture_url)
+values (default, 'laugh', 'http://cdn.messenger.com/sticker/sticker_blob_4036.svg');
+insert into project.sticker (sticker_id, emotion_nm, picture_url)
+values (default, 'laugh', 'http://cdn.messenger.com/sticker/sticker_blob_1873.svg');
+
+
+-- BOT INSERTIONS
+insert into project.bot (bot_id, server_url, bot_nm, avatar_id)
+values (default, 'http://fancybot.ru/', 'Timetable Bot', 13);
+insert into project.bot (bot_id, server_url, bot_nm, avatar_id)
+values (default, 'http://flibusta.net/', 'Library Bot', 14);
+insert into project.bot (bot_id, server_url, bot_nm, avatar_id)
+values (default, '237.98.114.3:5000', 'Kekifier', NULL);
+insert into project.bot (bot_id, server_url, bot_nm, avatar_id)
+values (default, 'http://github.com', 'Deprecation Notifier', NULL);
+insert into project.bot (bot_id, server_url, bot_nm, avatar_id)
+values (default, 'http://amazon.com/sale_bot', 'Amazon Sales', NULL);
+insert into project.bot (bot_id, server_url, bot_nm, avatar_id)
+values (default, 'http://wikipedia.org/searcher', 'WikiBot', NULL);
+insert into project.bot (bot_id, server_url, bot_nm, avatar_id)
+values (default, 'http://spotify.com/bot/genius', 'Genius Lyrics', NULL);
+insert into project.bot (bot_id, server_url, bot_nm, avatar_id)
+values (default, 'http://spotify.com/bot/music', 'Music Downloader', NULL);
+insert into project.bot (bot_id, server_url, bot_nm, avatar_id)
+values (default, 'http://2ka.mipt.ru', 'Бронирование стиралки', NULL);
+insert into project.bot (bot_id, server_url, bot_nm, avatar_id)
+values (default, 'http://aviasales.ru/bot', 'Бронирование билетов', NULL);
+
+-- CHAT INSERTIONS
+insert into project.chat (chat_id, avatar_id, members_cnt, chat_nm)
+values (default, 15, 120, 'concurrency-chat-support-2021');
+insert into project.chat (chat_id, avatar_id, members_cnt, chat_nm)
+values (default, 16, 210, 'БД ФПМИ');
+insert into project.chat (chat_id, avatar_id, members_cnt, chat_nm)
+values (default, NULL, 20, 'Теорвер 932');
+insert into project.chat (chat_id, avatar_id, members_cnt, chat_nm)
+values (default, NULL, 8, 'Tarantool/perf.counters');
+insert into project.chat (chat_id, avatar_id, members_cnt, chat_nm)
+values (default, NULL, 230, 'concurrency-chat-mipt-2021');
+insert into project.chat (chat_id, avatar_id, members_cnt, chat_nm)
+values (default, NULL, 2, 'Changelog');
+insert into project.chat (chat_id, avatar_id, members_cnt, chat_nm)
+values (default, NULL, 5, 'xnoobs');
+insert into project.chat (chat_id, avatar_id, members_cnt, chat_nm)
+values (default, 17, 330, 'Phystech.Genesis');
+insert into project.chat (chat_id, avatar_id, members_cnt, chat_nm)
+values (default, NULL, 197, 'Hackathon Winners');
+insert into project.chat (chat_id, avatar_id, members_cnt, chat_nm)
+values (default, NULL, 1, 'Saved Messages');
+
+select * from project.chat;
+select * from project.user;
+
+-- USER INSERTIONS
+insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
+values (default, '@fckxorg', 'max.kokr@somemail.com', 18, 'Another un-innocent elegant fall into the un-magnificent life of adults', '+77895341231', 'Maxim Kokryashkin');
+insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
+values (default, '@AlgebraicWolf', 'test@test.com', 19, 'Life without cringe is worthless', '+74951201851', 'Alexei VoLkOv');
+insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
+values (default, '@BorisTab', null, null, null, '+79833211893', 'Boris Tabachnikov');
+insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
+values (default, '@Alice', null, null, 'my face feels bigger than usual', '+79033811893', 'Alice');
+insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
+values (default, '@a.ershov', 'andrei.ershov@mipt.ru', null, 'А вы вводили понятие идеала?', '+78037651312', 'Andrei Ershov');
+insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
+values (default, '@Bob', 'bob@protonmail.com', null, 'Nothing fancy here', '+79235311893', 'Bob');
+insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
+values (default, '@Shisqa', 'shishatskiy.m@phystech.edu', 20, 'MIPT student', '+798322198993', 'Mikhail Shishatskiy');
+insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
+values (default, '@realDonaldTrump', 'mr.president@us.gov', 21, 'Make America great again', '+1345789312', 'Donald Trump');
+insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
+values (default, '@Putin', 'vvp@kremlin.ru', 22, 'F*ck Navalny', '+79000000000', 'Vladimir Putin');
+insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
+values (default, '@Xi', 'xi@prc.gov', null, 'Nice one! Plus 20 social points for you', '+4876132453', 'Xi Jinping');
+
+-- MESSAGE INSERTIONS
+insert into project.message (message_id, version_no, chat_id, sender_id, sticker_id, timestamp_dttm, payload_txt)
+values (default, 0, 1, 7, null, '2021-02-15 17:04:32', 'Здравствуйте! Пакетный менеджер не может найти docker-compose');
+insert into project.message (message_id, version_no, chat_id, sender_id, sticker_id, timestamp_dttm, payload_txt)
+values (default, 0, 1, 2, null, '2021-02-15 17:07:33', 'Сделай sudo apt-get update && sudo apt-get upgrade');
+insert into project.message (message_id, version_no, chat_id, sender_id, sticker_id, timestamp_dttm, payload_txt)
+values (default, 0, 1, 7, null, '2021-02-15 17:10:15', 'Спасибо, помогло!');
+insert into project.message (message_id, version_no, chat_id, sender_id, sticker_id, timestamp_dttm, payload_txt)
+values (default, 0, 1, 2, 3, '2021-02-15 17:11:32', null);
+insert into project.message (message_id, version_no, chat_id, sender_id, sticker_id, timestamp_dttm, payload_txt)
+values (default, 0, 6, 1, null, '2021-03-19 17:11:32', 'Перестаньте слать мне эти списки обновлений!');
+insert into project.message (message_id, version_no, chat_id, sender_id, sticker_id, timestamp_dttm, payload_txt)
+values (default, 0, 9, 4, null, '2021-03-29 11:45:17', 'Hello, Bob!');
+insert into project.message (message_id, version_no, chat_id, sender_id, sticker_id, timestamp_dttm, payload_txt)
+values (default, 0, 9, 6, null, '2021-03-29 11:47:13', 'Hello, Alice!');
+insert into project.message (message_id, version_no, chat_id, sender_id, sticker_id, timestamp_dttm, payload_txt)
+values (default, 0, 3, 5, null, '2021-04-01 9:30:11', 'Может займемся сочной алгеброй вместо теорвера?');
+insert into project.message (message_id, version_no, chat_id, sender_id, sticker_id, timestamp_dttm, payload_txt)
+values (default, 0, 3, 1, 6, '2021-03-29 11:45:17', null);
+insert into project.message (message_id, version_no, chat_id, sender_id, sticker_id, timestamp_dttm, payload_txt)
+values (default, 0, 2, 11, null, '2021-04-03 13:59:29', 'Кто не сдас проект, тот сдохнет, получается...');
+
+
+-- ATTACHMENT INSERTIONS (only 3 entries here because it's kinda strange to create attachment for every message I have by now)
+insert into project.attachment (attachment_id, message_id, version_no, type_txt, file_url, size_amt)
+values (default, 1, 0, '.jpg', 'drive.google.com/shisqa/error.png', null);
+insert into project.attachment (attachment_id, message_id, version_no, type_txt, file_url, size_amt)
+values (default, 8, 0, '.pdf', 'mipt.ru/study/chair/math/algebra/cathegory_theory.pdf', '100500');
+insert into project.attachment (attachment_id, message_id, version_no, type_txt, file_url, size_amt)
+values (default, 3, 0, '.jpg', 'drive.google.com/shisqa/cute_cat.png', '45000');
+
+-- USER_X_CHAT
+insert into project.user_x_chat (user_id, chat_id)
+values (7, 1);
+insert into project.user_x_chat (user_id, chat_id)
+values (2, 1);
+insert into project.user_x_chat (user_id, chat_id)
+values (1, 1);
+insert into project.user_x_chat (user_id, chat_id)
+values (4, 1);
+insert into project.user_x_chat (user_id, chat_id)
+values (6, 1);
+insert into project.user_x_chat (user_id, chat_id)
+values (4, 9);
+insert into project.user_x_chat (user_id, chat_id)
+values (6, 9);
+insert into project.user_x_chat (user_id, chat_id)
+values (1, 6);
+insert into project.user_x_chat (user_id, chat_id)
+values (5, 3);
+insert into project.user_x_chat (user_id, chat_id)
+values (1, 3);
+
+-- USER_X_STICKER
+insert into project.user_x_sticker (user_id, sticker_id)
+values (2, 3);
+insert into project.user_x_sticker (user_id, sticker_id)
+values (1, 6);
+insert into project.user_x_sticker (user_id, sticker_id)
+values (4, 1);
+insert into project.user_x_sticker (user_id, sticker_id)
+values (4, 9);
+insert into project.user_x_sticker (user_id, sticker_id)
+values (4, 5);
+insert into project.user_x_sticker (user_id, sticker_id)
+values (4, 3);
+insert into project.user_x_sticker (user_id, sticker_id)
+values (7, 1);
+insert into project.user_x_sticker (user_id, sticker_id)
+values (7, 10);
+insert into project.user_x_sticker (user_id, sticker_id)
+values (7, 5);
+insert into project.user_x_sticker (user_id, sticker_id)
+values (3, 8);
+
+-- BOT_X_CHAT
+insert into project.bot_x_chat (bot_id, chat_id)
+values (14, 1);
+insert into project.bot_x_chat (bot_id, chat_id)
+values (13, 7);
+insert into project.bot_x_chat (bot_id, chat_id)
+values (14, 7);
+insert into project.bot_x_chat (bot_id, chat_id)
+values (16, 3);
+
+
