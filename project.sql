@@ -367,3 +367,10 @@ insert into project.bot_x_chat (bot_id, chat_id)
 values (16, 3);
 
 
+-- CALL INSERTS
+insert into project.call (call_id, chat_id, duration_sec, video_flg, record_url)
+values(default, 4, '01:00:00', true, 'mail.zoom.us/meetings/meeting-2031.mp4');
+insert into project.call(call_id, chat_id, duration_sec, video_flg, record_url)
+values(default, 1, '01:30:00', true, 'youtube.com/lectoriy_diht/tpcc/spring-2021-11.mp4');
+insert into project.call(call_id, chat_id, duration_sec, video_flg, record_url)
+values(default, 3, '00:10:00', false, null);
