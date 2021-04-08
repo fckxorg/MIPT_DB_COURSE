@@ -11,6 +11,7 @@
 -- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
+
 -- PROJECT SCHEMA
 create schema if not exists project;
 
@@ -214,9 +215,9 @@ values (default, 'laugh', 'http://cdn.messenger.com/sticker/sticker_blob_1873.sv
 
 -- BOT INSERTIONS
 insert into project.bot (bot_id, server_url, bot_nm, avatar_id)
-values (default, 'http://fancybot.ru/', 'Timetable Bot', 13);
+values (default, 'http://fancybot.ru/', 'Timetable Bot', 1);
 insert into project.bot (bot_id, server_url, bot_nm, avatar_id)
-values (default, 'http://flibusta.net/', 'Library Bot', 14);
+values (default, 'http://flibusta.net/', 'Library Bot', 2);
 insert into project.bot (bot_id, server_url, bot_nm, avatar_id)
 values (default, '237.98.114.3:5000', 'Kekifier', NULL);
 insert into project.bot (bot_id, server_url, bot_nm, avatar_id)
@@ -236,9 +237,9 @@ values (default, 'http://aviasales.ru/bot', 'Бронирование билет
 
 -- CHAT INSERTIONS
 insert into project.chat (chat_id, avatar_id, members_cnt, chat_nm)
-values (default, 15, 120, 'concurrency-chat-support-2021');
+values (default, 3, 120, 'concurrency-chat-support-2021');
 insert into project.chat (chat_id, avatar_id, members_cnt, chat_nm)
-values (default, 16, 210, 'БД ФПМИ');
+values (default, 4, 210, 'БД ФПМИ');
 insert into project.chat (chat_id, avatar_id, members_cnt, chat_nm)
 values (default, NULL, 20, 'Теорвер 932');
 insert into project.chat (chat_id, avatar_id, members_cnt, chat_nm)
@@ -250,20 +251,18 @@ values (default, NULL, 2, 'Changelog');
 insert into project.chat (chat_id, avatar_id, members_cnt, chat_nm)
 values (default, NULL, 5, 'xnoobs');
 insert into project.chat (chat_id, avatar_id, members_cnt, chat_nm)
-values (default, 17, 330, 'Phystech.Genesis');
+values (default, 5, 330, 'Phystech.Genesis');
 insert into project.chat (chat_id, avatar_id, members_cnt, chat_nm)
 values (default, NULL, 197, 'Hackathon Winners');
 insert into project.chat (chat_id, avatar_id, members_cnt, chat_nm)
 values (default, NULL, 1, 'Saved Messages');
 
-select * from project.chat;
-select * from project.user;
 
 -- USER INSERTIONS
 insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
-values (default, '@fckxorg', 'max.kokr@somemail.com', 18, 'Another un-innocent elegant fall into the un-magnificent life of adults', '+77895341231', 'Maxim Kokryashkin');
+values (default, '@fckxorg', 'max.kokr@somemail.com', 6, 'Another un-innocent elegant fall into the un-magnificent life of adults', '+77895341231', 'Maxim Kokryashkin');
 insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
-values (default, '@AlgebraicWolf', 'test@test.com', 19, 'Life without cringe is worthless', '+74951201851', 'Alexei VoLkOv');
+values (default, '@AlgebraicWolf', 'test@test.com', 7, 'Life without cringe is worthless', '+74951201851', 'Alexei VoLkOv');
 insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
 values (default, '@BorisTab', null, null, null, '+79833211893', 'Boris Tabachnikov');
 insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
@@ -273,11 +272,11 @@ values (default, '@a.ershov', 'andrei.ershov@mipt.ru', null, 'А вы вводи
 insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
 values (default, '@Bob', 'bob@protonmail.com', null, 'Nothing fancy here', '+79235311893', 'Bob');
 insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
-values (default, '@Shisqa', 'shishatskiy.m@phystech.edu', 20, 'MIPT student', '+798322198993', 'Mikhail Shishatskiy');
+values (default, '@Shisqa', 'shishatskiy.m@phystech.edu', 8, 'MIPT student', '+798322198993', 'Mikhail Shishatskiy');
 insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
-values (default, '@realDonaldTrump', 'mr.president@us.gov', 21, 'Make America great again', '+1345789312', 'Donald Trump');
+values (default, '@realDonaldTrump', 'mr.president@us.gov', 9, 'Make America great again', '+1345789312', 'Donald Trump');
 insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
-values (default, '@Putin', 'vvp@kremlin.ru', 22, 'F*ck Navalny', '+79000000000', 'Vladimir Putin');
+values (default, '@Putin', 'vvp@kremlin.ru', 10, 'F*ck Navalny', '+79000000000', 'Vladimir Putin');
 insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
 values (default, '@Xi', 'xi@prc.gov', null, 'Nice one! Plus 20 social points for you', '+4876132453', 'Xi Jinping');
 
@@ -301,7 +300,7 @@ values (default, 0, 3, 5, null, '2021-04-01 9:30:11', 'Может займемс
 insert into project.message (message_id, version_no, chat_id, sender_id, sticker_id, timestamp_dttm, payload_txt)
 values (default, 0, 3, 1, 6, '2021-03-29 11:45:17', null);
 insert into project.message (message_id, version_no, chat_id, sender_id, sticker_id, timestamp_dttm, payload_txt)
-values (default, 0, 2, 11, null, '2021-04-03 13:59:29', 'Кто не сдас проект, тот сдохнет, получается...');
+values (default, 0, 2, 10, null, '2021-04-03 13:59:29', 'Кто не сдас проект, тот сдохнет, получается...');
 
 
 -- ATTACHMENT INSERTIONS (only 3 entries here because it's kinda strange to create attachment for every message I have by now)
@@ -358,13 +357,13 @@ values (3, 8);
 
 -- BOT_X_CHAT
 insert into project.bot_x_chat (bot_id, chat_id)
-values (14, 1);
+values (2, 1);
 insert into project.bot_x_chat (bot_id, chat_id)
-values (13, 7);
+values (1, 7);
 insert into project.bot_x_chat (bot_id, chat_id)
-values (14, 7);
+values (2, 7);
 insert into project.bot_x_chat (bot_id, chat_id)
-values (16, 3);
+values (4, 3);
 
 
 -- CALL INSERTS
