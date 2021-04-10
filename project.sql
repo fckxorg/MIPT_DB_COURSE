@@ -373,3 +373,132 @@ insert into project.call(call_id, chat_id, duration_sec, video_flg, record_url)
 values(default, 1, '01:30:00', true, 'youtube.com/lectoriy_diht/tpcc/spring-2021-11.mp4');
 insert into project.call(call_id, chat_id, duration_sec, video_flg, record_url)
 values(default, 3, '00:10:00', false, null);
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- //////////////////////////////////////////////////////
+--                   CHECKPOINT 5
+--  at least 10 UPDATE, SELECT, INSERT, DELETE queries
+-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- [CRUD] = {Create, Read, Update, Delete}
+-- Four basic operations of persistent storage
+-- 
+-- SQL equivalents:
+-- [Create] : 	INSERT
+-- [Read] 	: 	SELECT
+-- [Update] : 	UPDATE
+-- [Delete] : 	DELETE
+
+-- Now let's do some real work (ﾉ◕ヮ◕)ﾉ*:・
+
+-- ==================== Select =========================
+-- View table with messenger users
+select * from project.user;
+
+-- List names and handles of users without bio
+select user_nm, handle_txt
+from project.user
+where bio_txt is null;
+
+-- Count chats with more than 100 members
+select count(chat_id)
+from project.chat
+where members_cnt > 100;
+
+-- List all message texts from all chats
+select payload_txt
+from project.message;
+
+-- ==================== Update =========================
+-- Poor Boris, let's give him a bio
+update project.user
+set bio_txt = 'A little bit of copy-paste is better than generic waste'
+where handle_txt = '@BorisTab';
+
+-- Maintainer of TimetableBot decided to change address
+update project.bot
+set server_url = 'http://notsofancybot.com'
+where bot_id = 1;
+
+-- ==================== Insert =========================
+-- Whoops, there is a typo in message, it's better to fix it
+insert into project.message (message_id, version_no, chat_id, sender_id, sticker_id, timestamp_dttm, payload_txt)
+values (default, 1, 2, 10, null, '2021-04-03 13:59:29', 'Кто не сдаст проект, тот сдохнет, получается...');
+
+--- Mmm, internship meeting
+insert into project.call (call_id, chat_id, duration_sec, video_flg, record_url)
+values(10, 4, '01:00:00', true, 'mail.zoom.us/meetings/meeting-2031.mp4');
+
+-- ==================== Delete =========================
+-- Overthrowing an authoritarian regime has never been so easy
+
+delete from project.message 
+where sender_id in (9, 10);
+
+delete from project.user
+where user_id in (9, 10);
+
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- //////////////////////////////////////////////////////
+--                   CHECKPOINT 6
+--  at least 5 sensible SELECT queries corresponding to
+--  this checklist:
+--	
+--    a. GROUP BY + HAVING							[V]
+--    b. ORDER BY 									[V]
+--    c. func() OVER():			
+--      i. PARTITION BY								[V]
+--     ii. ORDER BY									[V]
+--    iii. PARTITION BY + ORDER BY					[V]
+--     iv. func: all three kinds of functions:
+--         * aggregate                              [V]
+--         * range                                  [V]
+--         * offset                                 [V]
+-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+-- [GROUP BY + HAVING] { Amount of peolple using each 'love' sticker }
+select s.sticker_id, emotion_nm, count(user_id) as used_by 
+from project.user_x_sticker uxs inner join project.sticker s 
+on s.sticker_id = uxs.sticker_id 
+group by s.sticker_id 
+having emotion_nm = 'love';
+
+-- [ORDER BY] { Top chats by members count }
+select chat_id, chat_nm, members_cnt
+from project.chat
+order by members_cnt desc;
+
+-- [PARTITION BY] { Amount of messages in each chat }
+select distinct c.chat_id, chat_nm, count(message_id) over(partition by c.chat_id) as msg_amount
+from project.message m inner join project.chat c
+on m.chat_id = c.chat_id
+group by c.chat_id, message_id;
+
+-- [ORDER BY] { Overall most used stickers, their ancestor and predecessor }
+select sticker_id, 
+       user_cnt,  
+       lag(user_cnt, 1, NULL) over (order by user_cnt desc) as prev_sticker_usage,
+	   lead(user_cnt, 1, NULL) over (order by user_cnt desc) as next_sticker_usage
+from 
+(
+	select s.sticker_id, count(user_id) as user_cnt from 
+	project.sticker s left join project.user_x_sticker uxs
+	on s.sticker_id = uxs.sticker_id
+	group by s.sticker_id
+) as usage_counted;
+
+-- [PARTITION BY + ORDER BY] { Top 3 users by number of messages in each chat }
+select user_id, user_nm, chat_nm, row_number() over(partition by chat_id order by message_cnt) as place
+from 
+(
+	select distinct user_id, c.chat_id, c.chat_nm , user_nm, count(message_id) over(partition by c.chat_id) as message_cnt
+	from project.user u left join project.message m 
+	on m.sender_id = u.user_id left join project.chat c 
+	on m.chat_id = c.chat_id
+	group by user_id, c.chat_id, m.message_id
+) as messages_counted;
+
