@@ -447,12 +447,12 @@ where user_id in (9, 10);
 --  at least 5 sensible SELECT queries corresponding to
 --  this checklist:
 --	
---    a. GROUP BY + HAVING							[V]
---    b. ORDER BY 									[V]
+--    a. GROUP BY + HAVING			    [V]
+--    b. ORDER BY 				    [V]
 --    c. func() OVER():			
---      i. PARTITION BY								[V]
---     ii. ORDER BY									[V]
---    iii. PARTITION BY + ORDER BY					[V]
+--      i. PARTITION BY				    [V]
+--     ii. ORDER BY				    [V]
+--    iii. PARTITION BY + ORDER BY		    [V]
 --     iv. func: all three kinds of functions:
 --         * aggregate                              [V]
 --         * range                                  [V]
