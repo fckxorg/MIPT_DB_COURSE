@@ -219,7 +219,7 @@ from
 	row_number()
 	over (
 		partition by result_sorting_type_code, competition_nm 
-		order by 
+		order by еще 
 		case when result_sorting_type_code='ASC' then participant_result_amt end desc, 
 		case when result_sorting_type_code='DESC' then participant_result_amt end asc) as place, 
 			competition_nm

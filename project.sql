@@ -502,3 +502,63 @@ from
 	group by user_id, c.chat_id, m.message_id
 ) as messages_counted;
 
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- //////////////////////////////////////////////////////
+--                   CHECKPOINT 8
+--  at least 6 views:
+--  * 2-3 should be made with dynamic masking
+--  * 3-4 should be sensible summary tables
+-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- [DYNAMIC MASKING]
+-- 1) Information about users, but phone numbers are hidden
+create or replace view user_info as
+select user_id, handle_txt, email_txt, avatar_id, bio_txt, user_nm, concat(left(phone_no, 2), '*********', right(phone_no, 2)) as phone_masked
+from project.user;
+
+-- 2) Bots, but server addresses are hidden to prevent leaks and DDoS attacks
+create or replace view anonymized_servers as
+select bot_id, bot_nm, avatar_id, concat(left(server_url, 5), '*******', right(server_url, 5)) as server_address -- Length just enough to get protocol and domain
+from project.bot;
+-- 3) 
+
+-- [SUMMARY TABLES]
+-- 3) Amount of messages in each chat
+create or replace view msg_in_chat as
+select distinct c.chat_id, chat_nm, count(message_id) over(partition by c.chat_id) as msg_amount
+from project.message m inner join project.chat c
+on m.chat_id = c.chat_id
+group by c.chat_id, message_id;
+
+-- 4) Usage statistics for stickers
+create or replace view sticker_stats as
+select sticker_id, 
+       user_cnt,  
+       lag(user_cnt, 1, NULL) over (order by user_cnt desc) as prev_sticker_usage,
+	   lead(user_cnt, 1, NULL) over (order by user_cnt desc) as next_sticker_usage
+from 
+(
+	select s.sticker_id, count(user_id) as user_cnt from 
+	project.sticker s left join project.user_x_sticker uxs
+	on s.sticker_id = uxs.sticker_id
+	group by s.sticker_id
+) as usage_counted;
+
+-- 5) Top 3 most active users in each chat
+-- Let's give them awards like in Yandex Music
+create or replace view active_users as
+select user_id, user_nm, chat_nm, row_number() over(partition by chat_id order by message_cnt) as place
+from 
+(
+	select distinct user_id, c.chat_id, c.chat_nm , user_nm, count(message_id) over(partition by c.chat_id) as message_cnt
+	from project.user u left join project.message m 
+	on m.sender_id = u.user_id left join project.chat c 
+	on m.chat_id = c.chat_id
+	group by user_id, c.chat_id, m.message_id
+) as messages_counted;
+
+-- 6) Most popular bots
+create view popular_bots as
+select distinct b.bot_id, bot_nm, count(chat_id) over(partition by b.bot_id)
+from project.bot b inner join project.bot_x_chat bxc on b.bot_id = bxc.bot_id
+order by count(chat_id) over(partition by b.bot_id) desc;
