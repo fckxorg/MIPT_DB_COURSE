@@ -187,7 +187,7 @@ values (default, 'http://cdn.messenger.com/avatar/avatar_blob_1247.png');
 insert into project.avatar (avatar_id, avatar_url)
 values (default, 'http://cdn.messenger.com/avatar/avatar_blob_9864.png');
 insert into project.avatar (avatar_id, avatar_url)
-values (default, 'http://cdn.messenger.com/avatar/avatar_blob_2387.png');
+values (default, 'http://cdn.messenger.com/avatar/avatar_blob_3000.png');
 
 
 -- STICKER INSERTIONS
@@ -562,3 +562,53 @@ create view popular_bots as
 select distinct b.bot_id, bot_nm, count(chat_id) over(partition by b.bot_id)
 from project.bot b inner join project.bot_x_chat bxc on b.bot_id = bxc.bot_id
 order by count(chat_id) over(partition by b.bot_id) desc;
+
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- //////////////////////////////////////////////////////
+--                   CHECKPOINT 9-10
+-- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
+-- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+
+create trigger create_avatar
+after insert on project.user 
+begin 
+	update project.avatar set avatar_id = 1
+		where project.user.user_id = new.user_id;
+end;
+
+create trigger call_people
+after insert on project.call for each row 
+begin 
+	update project.message set payload_txt = 'Присоединиться к звонку'
+	where 
+	insert into project.message values (default, 0, default, now()::date, 1, 'Присоединиться к звонку');
+end;
+
+select * from project.avatar;
+
+--drop procedure create_bot;
+
+--
+create or replace procedure create_bot(new_name varchar)
+language plpgsql 
+as $$
+begin
+	insert into project.bot values (default, 'http://www.bot_father', new_name, NULL);
+end
+$$;
+
+call create_bot('the best name');
+
+--
+create or replace procedure update_url(id_bot integer, new_url varchar)
+language plpgsql 
+as $$
+begin
+	if new_url like 'http://www.%' then 
+		update project.bot set server_url = new_url
+		where bot_id = 1;
+	end if;
+end	
+$$;
+
+call update_url(1, 'http://www.NEW_url');
