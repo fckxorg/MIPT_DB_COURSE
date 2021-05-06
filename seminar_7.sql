@@ -260,3 +260,4 @@ competition_nm
 FROM seminar_7.competition_result res inner join seminar_7.competition comp
 ON res.competition_id = comp.competition_id inner join seminar_7.participant p on p.participant_id = res.participant_id) as sorted
 ) as place_table;
+

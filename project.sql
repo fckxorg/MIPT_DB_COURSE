@@ -260,7 +260,7 @@ values (default, NULL, 1, 'Saved Messages');
 
 -- USER INSERTIONS
 insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
-values (default, '@fckxorg', 'max.kokr@somemail.com', 6, 'Another un-innocent elegant fall into the un-magnificent life of adults', '+77895341231', 'Maxim Kokryashkin');
+values (default, '@Fckxorg', 'max.kokr@mail.com', null, 'Another un-innocent elegant fall into the un-magnificent life of adults', '+79905341231', 'Maxim Kokryashkin');
 insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
 values (default, '@AlgebraicWolf', 'test@test.com', 7, 'Life without cringe is worthless', '+74951201851', 'Alexei VoLkOv');
 insert into project.user (user_id, handle_txt, email_txt, avatar_id, bio_txt, phone_no, user_nm)
@@ -566,29 +566,54 @@ order by count(chat_id) over(partition by b.bot_id) desc;
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 -- //////////////////////////////////////////////////////
 --                   CHECKPOINT 9-10
+-- At least two triggers and at least two procedures
 -- \\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\\
 -- ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 
-create trigger create_avatar
-after insert on project.user 
-begin 
-	update project.avatar set avatar_id = 1
-		where project.user.user_id = new.user_id;
-end;
+--~~~~~~~~~~~~~~~~~~ TRIGGERS ~~~~~~~~~~~~~~~~~~~~~~~~~~~
+-- 1) Sends message to chat when a call occurs
+create or replace function project.send_invite() returns trigger as
+  $$
+    declare
+    	id_chat int;
+    	send_message text;
+    begin
+	  id_chat := new.chat_id;
+	 send_message := 'Присоединиться к звонку';
+      execute 'insert into project.message values (default, 0, $1, 1, default, now()::date, $2)'
+      	using id_chat, send_message;
+     return new;
+    end;
+  $$ language plpgsql;
 
 create trigger call_people
-after insert on project.call for each row 
-begin 
-	update project.message set payload_txt = 'Присоединиться к звонку'
-	where 
-	insert into project.message values (default, 0, default, now()::date, 1, 'Присоединиться к звонку');
-end;
+after insert on project.call
+  for each row
+  execute procedure project.send_invite();
 
-select * from project.avatar;
+-- 2) Sets default avatar if no avatar was provided by user
+create or replace function project.change_id() returns trigger as
+  $$
+    declare
+    	id_new int;
+    begin
+	  id_new := new.user_id;
+	  if (new.avatar_id is NULL) then
+      	execute 'update project.user set avatar_id = 1 where user_id = $1'
+      	using id_new;
+      end if;
+     return new;
+    end;
+  $$ language plpgsql;
 
---drop procedure create_bot;
+create trigger create_avatar
+after insert on project.user
+  for each row
+  execute procedure project.change_id();
 
---
+--~~~~~~~~~~~~~~~~~~ PROCEDURES ~~~~~~~~~~~~~~~~~~~~~~~~
+-- 1) Creates bot with default server for handling 
+-- (like BotFather in Telegram)
 create or replace procedure create_bot(new_name varchar)
 language plpgsql 
 as $$
@@ -599,7 +624,8 @@ $$;
 
 call create_bot('the best name');
 
---
+
+-- 2) Procedure for incapsulated updates of bot handler address
 create or replace procedure update_url(id_bot integer, new_url varchar)
 language plpgsql 
 as $$
